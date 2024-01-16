@@ -10,19 +10,52 @@ export default function Home() {
   const [ready, setReady] = useState(null);
   const [final_scor,setFinalsco] = useState(null);
 
-  async function  test(){
-    const mssg = ["Bad it is and kinda Good","This Bad Man","how is it even this cool omg","Lets get going!! Good Taste"]
+  async function  test(reviews){
     let final_score =0;
-    for(let i=0;i<mssg.length;i++)
+    let init_final_score =0;
+    console.log("The length of the reviews",reviews.length)
+    for(let i=0;i<reviews.length;i++)
     {
-     const result= await classify(mssg[i])
-     final_score = result[0].score + final_score
-     //console.log("iterated final scores",final_score)
-     //console.log("From the function itself",result[0].score,"the iteration number",i)
+      //console.log(reviews[i].text)
+     const result= await classify(reviews[i].text)
+     init_final_score = result[0].score + init_final_score
+     final_score = init_final_score/reviews.length*10
+     console.log("From the function itself",result[0].score,"the iteration number",i)
     }
     //console.log("The Final score ",final_score)
     setFinalsco(final_score)
   }
+  
+  const callAPI = async () => {
+    const url = 'https://worldwide-restaurants.p.rapidapi.com/reviews';
+const options = {
+	method: 'POST',
+	headers: {
+		'content-type': 'application/x-www-form-urlencoded',
+		'X-RapidAPI-Key': 'e3ff25b962msh585e4f27493fb2dp1f6e48jsn069d06c3cfe4',
+		'X-RapidAPI-Host': 'worldwide-restaurants.p.rapidapi.com'
+	},
+	body: new URLSearchParams({
+		location_id: '15333482',
+		language: 'en_US',
+		currency: 'USD',
+		offset: '0'
+	})
+};
+    try {
+      const res = await fetch(url,options);
+      const data = await res.json();
+      var size = Object.keys(data).length;
+      let response_fromtest = await test(data.results.data)
+      // console.log("response fro mthe test ", response_fromtest)
+      // console.log("The length of the response data ",size)
+      // console.log("The Review from the restaurant ",data.results.data[3].text);
+      const result = await classify(data.results.data[3].text)
+      //console.log(" Damn shit ",result[0].score)
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const classify = async (text) => {
     if (!text) return;
     if (ready === null) setReady(false);
@@ -64,6 +97,7 @@ export default function Home() {
       </pre>
       )}
       <button onClick={test}>Click to Analyse</button>
+      <button onClick={callAPI}>Click to test API</button>
     </main>
   )
 }
