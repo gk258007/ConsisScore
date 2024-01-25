@@ -17,26 +17,23 @@ export default function Home() {
     let pos_score=0
     let neg_score =0
     console.log("The length of the reviews",reviews.length)
-    for(let i=0;i<reviews.length;i++)
-    {
-      //console.log(reviews[i].text)
-     const result= await classify(reviews[i].text)
+    for (const review of reviews){
+      const result= await classify(review[i].text)
      //console.log("The Score",result[0].score," the label ", result[0].label)
      if(result[0].label=='NEGATIVE')
      {
       score = -result[0].score.valueOf()
-      console.log("We are bad at business", score)
+      
       neg_score = score + neg_score
-      console.log("The final score after neg cummulation",neg_score)
+      
      }else{
       score = result[0].score.valueOf()
-      console.log("We are good at business",score)
+      
       pos_score = score + pos_score
-      console.log("The final score after pos cummulation",pos_score) 
+      
     }
-     //init_final_score = result[0].score + init_final_score
-     //console.log("From the function itself",result[0].score,"the iteration number",i)
     }
+   
     init_final_score = pos_score+ neg_score
     console.log("positive score ", pos_score)
     console.log("NEgative score ", neg_score)
@@ -65,12 +62,12 @@ const options = {
     try {
       const res = await fetch(url,options);
       const data = await res.json();
-      var size = Object.keys(data).length;
-      let response_fromtest = await test(data.results.data)
-      // console.log("response fro mthe test ", response_fromtest)
-      // console.log("The length of the response data ",size)
-      // console.log("The Review from the restaurant ",data.results.data[3].text);
-      const result = await classify(data.results.data[3].text)
+      // var size = Object.keys(data).length;
+      // let response_fromtest = await test(data.results.data)
+      // // console.log("response fro mthe test ", response_fromtest)
+      // // console.log("The length of the response data ",size)
+      // // console.log("The Review from the restaurant ",data.results.data[3].text);
+      // const result = await classify(data.results.data[3].text)
       //console.log(" Damn shit ",result[0].score)
     } catch (err) {
       console.log(err);
