@@ -12,18 +12,38 @@ export default function Home() {
 
   async function  test(reviews){
     let final_score =0;
+    let score = 0;
     let init_final_score =0;
+    let pos_score=0
+    let neg_score =0
     console.log("The length of the reviews",reviews.length)
     for(let i=0;i<reviews.length;i++)
     {
       //console.log(reviews[i].text)
      const result= await classify(reviews[i].text)
-     init_final_score = result[0].score + init_final_score
-     final_score = init_final_score/reviews.length*10
-     console.log("From the function itself",result[0].score,"the iteration number",i)
+     //console.log("The Score",result[0].score," the label ", result[0].label)
+     if(result[0].label=='NEGATIVE')
+     {
+      score = -result[0].score.valueOf()
+      console.log("We are bad at business", score)
+      neg_score = score + neg_score
+      console.log("The final score after neg cummulation",neg_score)
+     }else{
+      score = result[0].score.valueOf()
+      console.log("We are good at business",score)
+      pos_score = score + pos_score
+      console.log("The final score after pos cummulation",pos_score) 
     }
-    //console.log("The Final score ",final_score)
-    setFinalsco(final_score)
+     //init_final_score = result[0].score + init_final_score
+     //console.log("From the function itself",result[0].score,"the iteration number",i)
+    }
+    init_final_score = pos_score+ neg_score
+    console.log("positive score ", pos_score)
+    console.log("NEgative score ", neg_score)
+    console.log("Initial Final score", init_final_score)
+    final_score = (init_final_score/reviews.length)*10
+    console.log("The Final score ",final_score)
+    //setFinalsco(final_score)
   }
   
   const callAPI = async () => {
@@ -32,11 +52,11 @@ const options = {
 	method: 'POST',
 	headers: {
 		'content-type': 'application/x-www-form-urlencoded',
-		'X-RapidAPI-Key': 'e3ff25b962msh585e4f27493fb2dp1f6e48jsn069d06c3cfe4',
+		'X-RapidAPI-Key': process.env.NEXT_PUBLIC_XRAPIDAPIKEY,
 		'X-RapidAPI-Host': 'worldwide-restaurants.p.rapidapi.com'
 	},
 	body: new URLSearchParams({
-		location_id: '15333482',
+		location_id: '15333491',
 		language: 'en_US',
 		currency: 'USD',
 		offset: '0'
