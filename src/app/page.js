@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 
+
 export default function Home() {
 
   // Keep track of the classification result and the model loading status.
@@ -10,39 +11,59 @@ export default function Home() {
   const [ready, setReady] = useState(null);
   const [final_scor,setFinalsco] = useState(null);
 
+
+ 
+
+
+
+
+
   async function  test(reviews){
-    let final_score =0;
+    let init_score = 0;
+    let init_positive_score =0;
+    let init_negative_score =0;
     let score = 0;
-    let init_final_score =0;
     let pos_score=0
-    let neg_score =0
-    console.log("The length of the reviews",reviews.length)
+  let neg_score =0
+  let pos_count =0;
+  let neg_count=0;
+  let  weight_score_neg =0
+  let weight_score_pos =0;
+  let false_positive_score = 0;
+ 
     for (const review of reviews){
-      const result= await classify(review[i].text)
-     //console.log("The Score",result[0].score," the label ", result[0].label)
-     if(result[0].label=='NEGATIVE')
+      const result= await classify(review.text)
+     
+     console.log(result)
+      if(result[0].label==='NEGATIVE')
      {
       score = -result[0].score.valueOf()
-      
       neg_score = score + neg_score
-      
+      neg_count +=1
+      console.log("negative count incremented ", neg_count)
      }else{
       score = result[0].score.valueOf()
-      
       pos_score = score + pos_score
+      pos_count += 1
+      console.log("positive count incremented ", pos_count)
       
     }
     }
-   
-    init_final_score = pos_score+ neg_score
-    console.log("positive score ", pos_score)
-    console.log("NEgative score ", neg_score)
-    console.log("Initial Final score", init_final_score)
-    final_score = (init_final_score/reviews.length)*10
-    console.log("The Final score ",final_score)
+    console.log("Negative count",neg_count,"positive count",pos_count)
+    init_negative_score = neg_score/neg_count
+    init_positive_score = pos_score/pos_count
+    init_score = init_negative_score+init_positive_score
+    weight_score_neg = init_negative_score*neg_count + 1
+    weight_score_pos  = init_positive_score * pos_count 
+     false_positive_score = (weight_score_neg+ weight_score_pos)/2*5
+     console.log("False positive score", false_positive_score)
+    console.log("Actual scores", neg_score,"pos: ",pos_score)
+    console.log("init score",init_score)
+    console.log("Init negative score",init_negative_score,"init positive score",init_positive_score)
+    console.log("The proper score ",(false_positive_score))
     //setFinalsco(final_score)
   }
-  
+  //"Sat down at the table and ordered two appetizer items and beers.  The beers came soon, but after asking the waiter three times over the next 1 hour and 20 minutes about our food, he just stopped answering and shook his head.  I eventually walked inside to pay the bill....after I had them remove the non-existent food.  Whatever, I guess"
   const callAPI = async () => {
     const url = 'https://worldwide-restaurants.p.rapidapi.com/reviews';
 const options = {
@@ -52,6 +73,8 @@ const options = {
 		'X-RapidAPI-Key': process.env.NEXT_PUBLIC_XRAPIDAPIKEY,
 		'X-RapidAPI-Host': 'worldwide-restaurants.p.rapidapi.com'
 	},
+
+  //15333491
 	body: new URLSearchParams({
 		location_id: '15333491',
 		language: 'en_US',
@@ -62,13 +85,14 @@ const options = {
     try {
       const res = await fetch(url,options);
       const data = await res.json();
-      // var size = Object.keys(data).length;
-      // let response_fromtest = await test(data.results.data)
-      // // console.log("response fro mthe test ", response_fromtest)
-      // // console.log("The length of the response data ",size)
-      // // console.log("The Review from the restaurant ",data.results.data[3].text);
+      var size = Object.keys(data).length;
+      console.log("The data being sent to test function ",data.results.data)
+      let response_fromtest = await test(data.results.data)
+      // console.log("response fro mthe test ", response_fromtest)
+      // console.log("The length of the response data ",size)
+      // console.log("The Review from the restaurant ",data.results.data[3].text);
       // const result = await classify(data.results.data[3].text)
-      //console.log(" Damn shit ",result[0].score)
+      // console.log(" Damn shit ",result[0].score)
     } catch (err) {
       console.log(err);
     }
@@ -113,7 +137,6 @@ const options = {
           (!ready && !final_scor) ? 'Loading...' : JSON.stringify(final_scor, null, 2)}
       </pre>
       )}
-      <button onClick={test}>Click to Analyse</button>
       <button onClick={callAPI}>Click to test API</button>
     </main>
   )
