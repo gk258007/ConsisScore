@@ -12,11 +12,6 @@ export default function Home() {
   const [final_scor,setFinalsco] = useState(null);
 
 
- 
-
-
-
-
 
   async function  test(reviews){
     let init_score = 0;
@@ -59,13 +54,13 @@ export default function Home() {
   }
   //"Sat down at the table and ordered two appetizer items and beers.  The beers came soon, but after asking the waiter three times over the next 1 hour and 20 minutes about our food, he just stopped answering and shook his head.  I eventually walked inside to pay the bill....after I had them remove the non-existent food.  Whatever, I guess"
   const callAPI = async () => {
-    const url = 'https://worldwide-restaurants.p.rapidapi.com/reviews';
+    const url = 'https://restaurants222.p.rapidapi.com/reviews';
 const options = {
 	method: 'POST',
 	headers: {
 		'content-type': 'application/x-www-form-urlencoded',
 		'X-RapidAPI-Key': process.env.NEXT_PUBLIC_XRAPIDAPIKEY,
-		'X-RapidAPI-Host': 'worldwide-restaurants.p.rapidapi.com'
+		'X-RapidAPI-Host': 'restaurants222.p.rapidapi.com'
 	},
 
   //15333491
