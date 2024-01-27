@@ -49,18 +49,12 @@ export default function Home() {
       
     }
     }
-    console.log("Negative count",neg_count,"positive count",pos_count)
-    init_negative_score = neg_score/neg_count
-    init_positive_score = pos_score/pos_count
-    init_score = init_negative_score+init_positive_score
-    weight_score_neg = init_negative_score*neg_count + 1
-    weight_score_pos  = init_positive_score * pos_count 
-     false_positive_score = (weight_score_neg+ weight_score_pos)/2*5
-     console.log("False positive score", false_positive_score)
+    init_negative_score = (neg_score/reviews.length) + 1
+    init_positive_score = pos_score/reviews.length
+    init_score = (init_negative_score+init_positive_score)/2*5
     console.log("Actual scores", neg_score,"pos: ",pos_score)
     console.log("init score",init_score)
     console.log("Init negative score",init_negative_score,"init positive score",init_positive_score)
-    console.log("The proper score ",(false_positive_score))
     //setFinalsco(final_score)
   }
   //"Sat down at the table and ordered two appetizer items and beers.  The beers came soon, but after asking the waiter three times over the next 1 hour and 20 minutes about our food, he just stopped answering and shook his head.  I eventually walked inside to pay the bill....after I had them remove the non-existent food.  Whatever, I guess"
