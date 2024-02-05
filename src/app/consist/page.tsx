@@ -9,7 +9,7 @@ export default function Home() {
   // Keep track of the classification result and the model loading status.
   const [result, setResult] = useState(null);
   const [ready, setReady] = useState(null);
-  const [final_scor,setFinalsco] = useState(null);
+  const [final_scor,setFinalsco] = useState(0);
 
 
 
@@ -47,6 +47,7 @@ export default function Home() {
     init_negative_score = (neg_score/reviews.length) + 1
     init_positive_score = pos_score/reviews.length
     init_score = (init_negative_score+init_positive_score)/2*5
+    setFinalsco(init_score)
     console.log("Actual scores", neg_score,"pos: ",pos_score)
     console.log("init score",init_score)
     console.log("Init negative score",init_negative_score,"init positive score",init_positive_score)
@@ -89,16 +90,15 @@ const options = {
   const classify = async (text) => {
     if (!text) return;
     if (ready === null) setReady(false);
-    // Make a request to the /classify route on the server.
+    
     const result = await fetch(`/classify?text=${encodeURIComponent(text)}`);
-    //console.log("The text that is sent to the API",text)
-    // If this is the first time we've made a request, set the ready flag.
+    
     if (!ready) setReady(true);
 
     const json = await result.json();
-    //console.log("The Result",json)
+  
     return json;
-    //setResult(json);
+
   };
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-12">

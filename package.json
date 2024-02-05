@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@xenova/transformers": "^2.14.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.1",
     "next": "14.0.4",
     "react": "^18",
