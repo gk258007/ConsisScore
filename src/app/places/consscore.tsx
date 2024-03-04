@@ -35,7 +35,7 @@ async function getcc(name:any,resta:any) {
     })
      total = sum/5*100
     console.log("the Consistency score of the restaurant",name, " is ",total)
-
+//OMGTHINS
 
   }catch(e){
     console.log("Error in the sentiment score it didnt run man",e)
