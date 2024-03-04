@@ -1,13 +1,5 @@
 "use client";
-import { useState } from "react";
-import Place from "./places/page";
-
-var requestOptions: any = {
-  method: "POST",
-  redirect: "follow",
-};
-
-export default async function Page() {
+export default function Page() {
   const classify = async (text: string) => {
     if (!text) return;
 
@@ -25,8 +17,8 @@ export default async function Page() {
 
   return (
     <div>
-      <h1 className="mb-2 text-center text-5xl font-bold">Consistency Calci</h1>
-      <button onClick={callme}>click to classify</button>
+      This is shit
+      <button onClick={callme}>CLick to classify</button>
     </div>
   );
 }
