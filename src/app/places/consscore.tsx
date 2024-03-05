@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+const myJson:any = {};
 const classify = async (text: string) => {
   
   const result = await fetch(`/classify?text=${encodeURIComponent(text)}`);
@@ -35,6 +36,16 @@ async function getcc(name:any,resta:any) {
     })
      total = sum/5*100
     console.log("the Consistency score of the restaurant",name, " is ",total)
+    const keys = ["Name", "Score"]; // Array of keys
+   
+    
+    myJson["Data"] = myJson["Data"] || [];
+
+    
+    myJson["Data"].push({ Name: name, Score: total });
+    
+    console.log("Data from the JSON Parse function",JSON.stringify(myJson));
+  
 //OMGTHINS
 
   }catch(e){
@@ -66,9 +77,12 @@ async function callme(reviews: any) {
 export default  function Consscore({ listedplace }: { listedplace: any }) {
   const[consscore,setcConsScore] = useState(0);
   useEffect(()=>{
-   const data=  callme(listedplace)
-   console.log("The data from the main function",data)
-  })
+   callme(listedplace)
+  },[callme])
+  function getData(){
+   console.log(myJson)
+    
+  }
   return (
     <>
       {/* <div key={listedplace.id}>Consscore:{listedplace[0].displayName.text}</div> */}
@@ -82,7 +96,7 @@ export default  function Consscore({ listedplace }: { listedplace: any }) {
             <p>Consistency Score: {consscore}</p>
           </div>
         ))}
-        <button onClick={() => callme(listedplace)}>Click to classify</button>
+        <button onClick={() => getData()}>Click to classify</button>
       </div>
     </>
   );
